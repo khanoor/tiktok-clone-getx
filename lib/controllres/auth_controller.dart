@@ -6,19 +6,41 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/models/user.dart' as model;
+import 'package:tiktok/views/screens/auth/home_screen.dart';
+import 'package:tiktok/views/screens/auth/login_screen.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
+  late Rx<User?> _user;
+  @override
+  void onReady() {
+    super.onReady();
+    _user = Rx<User?>(firebaseAuth.currentUser);
+    _user.bindStream(firebaseAuth.authStateChanges());
+    ever(_user, _setInitialScreen);
+  }
 
-late Rx<File?> _pickedImage;
-File? get ProfilePhoto => _pickedImage.value;
+  _setInitialScreen(User? user) {
+    if (user == null) {
+      Get.offAll(() => LoginScreen());
+    } else {
+      Get.offAll(() => const HomeScreen());
+    }
+  }
+
+  // late Rx<File?> _pickedImage;
+  late Rx<File?> _pickedImage = Rx<File?>(null);
+  File? get profilePhoto => _pickedImage.value;
   pickImage() async {
-    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(pickedImage != null){
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
       Get.snackbar("Profile Picture", "Selected Successfully");
+      _pickedImage.value = File(pickedImage.path);
     }
     _pickedImage = Rx<File?>(File(pickedImage!.path));
   }
+
   Future<String> _uplodaToStorage(File image) async {
     Reference ref = firebaseStroge
         .ref()
@@ -34,7 +56,7 @@ File? get ProfilePhoto => _pickedImage.value;
       String username, String email, String password, File? image) async {
     try {
       if (username.isNotEmpty &&
-          email.isEmpty &&
+          email.isNotEmpty &&
           password.isNotEmpty &&
           image != null) {
         UserCredential cred = await firebaseAuth.createUserWithEmailAndPassword(
@@ -44,7 +66,7 @@ File? get ProfilePhoto => _pickedImage.value;
         String downloadUrl = await _uplodaToStorage(image);
         model.User user = model.User(
             name: username,
-            profilePhoto: downloadUrl,
+            profilePhoto: downloadUrl!,
             email: email,
             uid: cred.user!.uid);
         await firestore
@@ -53,6 +75,20 @@ File? get ProfilePhoto => _pickedImage.value;
             .set(user.toJson());
       } else {
         Get.snackbar("Error Creating Account", "Please enter all the fields");
+      }
+    } catch (e) {
+      Get.snackbar("Error Creating Account", e.toString());
+    }
+  }
+
+  void loginUser(String email, String password) async {
+    try {
+      if (email.isNotEmpty && password.isNotEmpty) {
+        await firebaseAuth.signInWithEmailAndPassword(
+            email: email, password: password);
+        print("loginnnn");
+      } else {
+        Get.snackbar("Error Login", "Please Enter all fields");
       }
     } catch (e) {
       Get.snackbar("Error Creating Account", e.toString());

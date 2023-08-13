@@ -68,11 +68,11 @@ class LoginScreen extends StatelessWidget {
                   Radius.circular(5),
                 ),
               ),
-              child: const InkWell(
-                // onTap: () => authController.loginUser(
-                //   _emailController.text,
-                //   _passwordController.text,
-                // ),
+              child: InkWell(
+                onTap: () => authController.loginUser(
+                  _emailController.text,
+                  _passwordController.text,
+                ),
                 child: Center(
                   child: Text(
                     'Login',

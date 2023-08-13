@@ -38,7 +38,7 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
-                 Stack(
+                Stack(
                   children: [
                     const CircleAvatar(
                       radius: 64,
@@ -108,7 +108,7 @@ class SignupScreen extends StatelessWidget {
                         _userNameController.text,
                         _emailController.text,
                         _passwordController.text,
-                        authController.ProfilePhoto),
+                        authController.profilePhoto),
                     child: const Center(
                       child: Text(
                         'Reister',
