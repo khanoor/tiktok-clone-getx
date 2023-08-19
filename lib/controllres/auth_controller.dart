@@ -66,7 +66,7 @@ class AuthController extends GetxController {
         String downloadUrl = await _uplodaToStorage(image);
         model.User user = model.User(
             name: username,
-            profilePhoto: downloadUrl!,
+            profilePhoto: downloadUrl,
             email: email,
             uid: cred.user!.uid);
         await firestore

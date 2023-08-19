@@ -133,11 +133,11 @@ class SignupScreen extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      // onTap: () => Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => SignupScreen(),
-                      //   ),
-                      // ),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SignupScreen(),
+                        ),
+                      ),
                       child: Text(
                         'Login',
                         style: TextStyle(fontSize: 20, color: buttonColor),
