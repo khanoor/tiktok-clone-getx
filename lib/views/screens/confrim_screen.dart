@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:video_player/video_player.dart';
 
+import '../../controllres/upload_video_controller.dart';
 import '../widgets/text_input_field.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -24,8 +25,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   TextEditingController _songController = TextEditingController();
   TextEditingController _captionController = TextEditingController();
 
-  // UploadVideoController uploadVideoController =
-  //     Get.put(UploadVideoController());
+  UploadVideoController uploadVideoController =
+      Get.put(UploadVideoController());
 
   @override
   void initState() {
@@ -92,11 +93,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     height: 10,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
-                      // => uploadVideoController.uploadVideo(
-                      //     _songController.text,
-                      //     _captionController.text,
-                      //     widget.videoPath),
+                      onPressed: () => uploadVideoController.uploadVideo(
+                          _songController.text,
+                          _captionController.text,
+                          widget.videoPath),
                       child: const Text(
                         'Share!',
                         style: TextStyle(
