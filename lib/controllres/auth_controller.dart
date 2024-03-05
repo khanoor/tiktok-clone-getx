@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tiktok/constants.dart';
@@ -41,8 +42,9 @@ class AuthController extends GetxController {
     _pickedImage = Rx<File?>(File(pickedImage!.path));
   }
 
+//////////////// Upload to firebse storage ////////////////////////
   Future<String> _uplodaToStorage(File image) async {
-    Reference ref = firebaseStroge
+    Reference ref = firebaseStorage
         .ref()
         .child('profilePics')
         .child(firebaseAuth.currentUser!.uid);
@@ -52,6 +54,7 @@ class AuthController extends GetxController {
     return downloadUrl;
   }
 
+//////////////// Register User ////////////////////////
   Future<void> registerUser(
       String username, String email, String password, File? image) async {
     try {
@@ -70,7 +73,7 @@ class AuthController extends GetxController {
             email: email,
             uid: cred.user!.uid);
         await firestore
-            .collection('user')
+            .collection('users')
             .doc(cred.user!.uid)
             .set(user.toJson());
       } else {
@@ -81,12 +84,15 @@ class AuthController extends GetxController {
     }
   }
 
+//////////////// Login User ////////////////////////
   void loginUser(String email, String password) async {
     try {
       if (email.isNotEmpty && password.isNotEmpty) {
         await firebaseAuth.signInWithEmailAndPassword(
             email: email, password: password);
-        print("loginnnn");
+        if (kDebugMode) {
+          print("login successfully");
+        }
       } else {
         Get.snackbar("Error Login", "Please Enter all fields");
       }

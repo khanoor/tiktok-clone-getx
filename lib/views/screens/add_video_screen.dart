@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tiktok/constants.dart';
@@ -26,11 +25,11 @@ class AddVideroScreen extends StatelessWidget {
               children: [
                 SimpleDialogOption(
                   onPressed: () => pickVideo(ImageSource.gallery, context),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.image),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Gallery",
                           style: TextStyle(fontSize: 20),
@@ -41,11 +40,11 @@ class AddVideroScreen extends StatelessWidget {
                 ),
                 SimpleDialogOption(
                   onPressed: () => pickVideo(ImageSource.camera, context),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.camera_alt),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Camera",
                           style: TextStyle(fontSize: 20),
@@ -58,11 +57,11 @@ class AddVideroScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.cancel),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Text(
                           "Cancel",
                           style: TextStyle(fontSize: 20),
@@ -85,7 +84,7 @@ class AddVideroScreen extends StatelessWidget {
             height: 50,
             width: 190,
             decoration: BoxDecoration(color: buttonColor),
-            child: Center(
+            child: const Center(
               child: Text(
                 "Add Video",
                 style: TextStyle(
