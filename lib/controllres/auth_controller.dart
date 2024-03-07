@@ -7,12 +7,15 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tiktok/constants.dart';
 import 'package:tiktok/models/user.dart' as model;
-import 'package:tiktok/views/screens/auth/home_screen.dart';
+import 'package:tiktok/views/screens/home_screen.dart';
 import 'package:tiktok/views/screens/auth/login_screen.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
   late Rx<User?> _user;
+
+  User get user => _user.value!;
+
   @override
   void onReady() {
     super.onReady();
