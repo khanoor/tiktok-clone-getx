@@ -1,107 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tiktok/constants.dart';
+import 'package:tiktok/controllres/comment_controller.dart';
+import 'package:timeago/timeago.dart' as tago;
 
-class CommentScreen extends StatefulWidget {
-  const CommentScreen({super.key});
+class CommentScreen extends StatelessWidget {
+  final String id;
+  CommentScreen({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
 
-  @override
-  State<CommentScreen> createState() => _CommentScreenState();
-}
+  final TextEditingController _commentController = TextEditingController();
+  CommentController commentController = Get.put(CommentController());
 
-final TextEditingController commentController = TextEditingController();
-
-class _CommentScreenState extends State<CommentScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    commentController.updatePostId(id);
+
     return Scaffold(
-        body: SingleChildScrollView(
-      child: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: Column(
-          children: [
-            Expanded(
-                child: ListView.builder(
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Colors.black,
-                          backgroundImage: NetworkImage("profile pic"),
-                        ),
-                        title: const Row(
-                          children: [
-                            Text(
-                              "username",
-                              style: TextStyle(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: Column(
+            children: [
+              Expanded(
+                child: Obx(() {
+                  return ListView.builder(
+                      itemCount: commentController.comments.length,
+                      itemBuilder: (context, index) {
+                        final comment = commentController.comments[index];
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            backgroundImage: NetworkImage(comment.profilePhoto),
+                          ),
+                          title: Row(
+                            children: [
+                              Text(
+                                "${comment.username}  ",
+                                style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.red,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              "Comments",
-                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                comment.comment,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        subtitle: const Row(
-                          children: [
-                            Text(
-                              'date',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              '10 Likes',
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        trailing: InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.favorite,
-                            size: 25,
-                            color: Colors.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      );
-                    })),
-            const Divider(
-              color: Colors.black,
-            ),
-            ListTile(
-              title: TextFormField(
-                controller: commentController,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
-                decoration: const InputDecoration(
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                tago.format(
+                                  comment.datePublished.toDate(),
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                '${comment.likes.length} likes',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                          trailing: InkWell(
+                            onTap: () =>
+                                commentController.likeComment(comment.id),
+                            child: Icon(
+                              Icons.favorite,
+                              size: 25,
+                              color: comment.likes
+                                      .contains(authController.user.uid)
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
+                          ),
+                        );
+                      });
+                }),
+              ),
+              const Divider(),
+              ListTile(
+                title: TextFormField(
+                  controller: _commentController,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                  decoration: const InputDecoration(
                     labelText: 'Comment',
                     labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700),
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red)),
+                      borderSide: BorderSide(
+                        color: Colors.red,
+                      ),
+                    ),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red))),
-              ),
-              trailing: TextButton(
-                  onPressed: () {},
+                      borderSide: BorderSide(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+                trailing: TextButton(
+                  onPressed: () =>
+                      commentController.postComment(_commentController.text),
                   child: const Text(
                     'Send',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  )),
-            )
-          ],
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }
