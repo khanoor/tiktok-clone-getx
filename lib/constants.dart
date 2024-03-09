@@ -4,11 +4,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok/controllres/auth_controller.dart';
 import 'package:tiktok/views/screens/add_video_screen.dart';
+import 'package:tiktok/views/screens/search_screen.dart';
 import 'package:tiktok/views/screens/video_screen.dart';
 
 List pages = [
   VideoScreen(),
-  const Text("Serach Screen"),
+  const SearchScreen(),
   const AddVideroScreen(),
   const Text("Messages Screen"),
   const Text("Profile Screen"),

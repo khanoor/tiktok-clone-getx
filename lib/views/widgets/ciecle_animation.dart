@@ -20,10 +20,10 @@ class _CircleAnimationState extends State<CircleAnimation>
     controller.repeat();
   }
 
-  @override
+   @override
   void dispose() {
+    controller.dispose(); 
     super.dispose();
-    controller.dispose();
   }
 
   @override
